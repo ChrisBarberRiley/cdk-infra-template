@@ -8,10 +8,10 @@ export class DataStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps & BaseProps) {
     super(scope, id, props);
 
-    const tableBase = (this.node.tryGetContext("dataBase") as string) ?? "data";
+    const baseName = (this.node.tryGetContext("baseName") as string) ?? "data";
 
     const table = new dynamodb.Table(this, "Table", {
-      tableName: name(tableBase, props),
+      tableName: name(baseName, props),
       partitionKey: { name: "pk", type: dynamodb.AttributeType.STRING },
       sortKey: { name: "sk", type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,

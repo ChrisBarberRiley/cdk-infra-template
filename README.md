@@ -4,7 +4,7 @@ Reusable **AWS CDK v2** template for spinning up backend infra to reuse across p
 Two context args: `project` and `stage`.
 
 ## What this repo gives you (now)
-* A **DynamoDB** table named `<project>-<stage>-<dataBase>` (configurable via `-c dataBase`, defaults to `data`).
+* A **DynamoDB** table named `<project>-<stage>-<baseName>` (configurable via `-c baseName`, defaults to `data`).
 * A value in **AWS SSM Parameter Store** at `/<project>/<stage>/table_name`.
 * Stack env uses your shell’s AWS profile/region.
 
@@ -38,7 +38,7 @@ cdk synth -c project=test -c stage=dev
 
 # Deploy (idempotent)
 # Optional: pick your own base name for the table
-cdk deploy -c project=test -c stage=dev -c dataBase=dbname
+cdk deploy -c project=test -c stage=dev -c baseName=dbname
 
 # See what would change vs deployed state
 cdk diff -c project=test -c stage=dev
