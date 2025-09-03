@@ -7,6 +7,8 @@ import { Construct } from "constructs";
 import { BaseProps, name } from "./shared";
 
 export class EventsStack extends Stack {
+  public readonly topic: sns.Topic;
+
   constructor(scope: Construct, id: string, props: StackProps & BaseProps) {
     super(scope, id, props);
 
@@ -26,14 +28,15 @@ export class EventsStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    const topic = new sns.Topic(this, "Topic", {
+    this.topic = new sns.Topic(this, "Topic", {
       topicName: name(eventsBase, props),
     });
-    topic.addSubscription(new subs.SqsSubscription(queue));
+
+    this.topic.addSubscription(new subs.SqsSubscription(queue));
 
     new ssm.StringParameter(this, "TopicArn", {
       parameterName: `/${props.project}/${props.stage}/events/topic_arn`,
-      stringValue: topic.topicArn,
+      stringValue: this.topic.topicArn,
     });
     new ssm.StringParameter(this, "QueueUrl", {
       parameterName: `/${props.project}/${props.stage}/events/queue_url`,

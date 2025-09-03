@@ -5,12 +5,14 @@ import { Construct } from "constructs";
 import { BaseProps, name } from "./shared";
 
 export class DataStack extends Stack {
+  public readonly table: dynamodb.Table;
+
   constructor(scope: Construct, id: string, props: StackProps & BaseProps) {
     super(scope, id, props);
 
     const baseName = (this.node.tryGetContext("baseName") as string) ?? "data";
 
-    const table = new dynamodb.Table(this, "Table", {
+    this.table = new dynamodb.Table(this, "Table", {
       tableName: name(baseName, props),
       partitionKey: { name: "pk", type: dynamodb.AttributeType.STRING },
       sortKey: { name: "sk", type: dynamodb.AttributeType.STRING },
@@ -21,7 +23,7 @@ export class DataStack extends Stack {
 
     new ssm.StringParameter(this, "TableNameParam", {
       parameterName: `/${props.project}/${props.stage}/table_name`,
-      stringValue: table.tableName,
+      stringValue: this.table.tableName,
     });
   }
 }
