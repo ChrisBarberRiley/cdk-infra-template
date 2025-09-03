@@ -7,8 +7,13 @@ Two context args: `project` and `stage`.
 * A **DynamoDB** table named `<project>-<stage>-<baseName>` (configurable via `-c baseName`, defaults to `data`).
 * A value in **AWS SSM Parameter Store** at `/<project>/<stage>/table_name`.
 * Stack env uses your shell’s AWS profile/region.
+* **Events**: an Amazon Simple Notification Service (SNS) topic and an Amazon Simple Queue Service (SQS) queue with a dead-letter queue (DLQ), named `<project>-<stage>-<eventsBase>` (configurable via `-c eventsBase`, defaults to `events`).
+* Published SSM params:
+  - `/<project>/<stage>/events/topic_arn`
+  - `/<project>/<stage>/events/queue_url`
 
-> Future steps (not yet included): **SNS → SQS** events, **Lambda**, **API Gateway**, **Cognito**, **S3 + CloudFront**. All follow the same `project/stage` pattern.
+
+> Future steps (not yet included): Lambda, API Gateway, Cognito, S3 + CloudFront.
 
 ---
 
@@ -47,12 +52,18 @@ cdk diff -c project=test -c stage=dev
 cdk destroy --all -c project=test -c stage=dev
 ```
 
-## Verify the contract value in SSM
+## Verify the contract values in SSM
 
 ```bash
+# Table name
 aws ssm get-parameter \
   --name /test/dev/table_name \
   --query Parameter.Value --output text
+
+# Events wiring
+aws ssm get-parameters \
+  --names /test/dev/events/topic_arn /test/dev/events/queue_url \
+  --query 'Parameters[*].{Name:Name,Value:Value}'
 ```
 
 ## Conventions
