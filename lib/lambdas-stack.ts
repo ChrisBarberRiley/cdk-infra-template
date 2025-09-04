@@ -18,7 +18,7 @@ export class LambdasStack extends Stack {
   constructor(scope: Construct, id: string, props: LambdasProps) {
     super(scope, id, props);
 
-    const pkPrefix = (this.node.tryGetContext("pkPrefix") as string) ?? "REC";
+    const pkPrefix = (this.node.tryGetContext("pkPrefix") as string) ?? "";
 
     this.httpFn = new lambda.NodejsFunction(this, "Http", {
       functionName: name("http", props),
