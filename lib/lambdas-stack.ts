@@ -18,6 +18,8 @@ export class LambdasStack extends Stack {
   constructor(scope: Construct, id: string, props: LambdasProps) {
     super(scope, id, props);
 
+    const pkPrefix = (this.node.tryGetContext("pkPrefix") as string) ?? "REC";
+
     this.httpFn = new lambda.NodejsFunction(this, "Http", {
       functionName: name("http", props),
       entry: join(process.cwd(), "lambda", "http.ts"),
@@ -27,6 +29,7 @@ export class LambdasStack extends Stack {
       environment: {
         TABLE_NAME: props.table.tableName,
         TOPIC_ARN: props.topic.topicArn,
+        PK_PREFIX: pkPrefix,
       },
     });
 
