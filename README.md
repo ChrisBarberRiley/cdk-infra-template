@@ -28,7 +28,7 @@ Two context args: `project` and `stage`.
 
 ```bash
 export AWS_PROFILE=<YOUR_PROFILE>
-export AWS_REGION=eu-west-1   # or your region
+export AWS_REGION=eu-west-2   # or your region
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 cdk bootstrap aws://$ACCOUNT_ID/$AWS_REGION
 ```
