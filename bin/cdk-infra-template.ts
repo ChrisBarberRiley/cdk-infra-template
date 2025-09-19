@@ -30,6 +30,7 @@ const lambdas = new LambdasStack(app, `${project}-${stage}-lambdas`, {
   stage,
   table: data.table,
   topic: events.topic,
+  moderationQueue: events.moderationQueue,
 });
 
 const apis = new ApiStack(app, `${project}-${stage}-api`, {

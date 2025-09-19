@@ -47,6 +47,12 @@ export class ApiStack extends Stack {
       integration: integ,
     });
 
+    this.httpApi.addRoutes({
+      path: `/${routeBase}`,
+      methods: [apigwv2.HttpMethod.GET],
+      integration: integ,
+    });
+
     // WAF: per-IP rate limit - requests per 5 minutes
     const webAcl = new wafv2.CfnWebACL(this, "ApiWaf", {
       scope: "REGIONAL",
